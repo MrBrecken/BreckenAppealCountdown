@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brecken Sound Space Appeal Countdown</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        h1:hover {
+            transform: scale(1.1);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+        }
+
+        .countdown {
+            font-size: 4rem;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            cursor: default;
+        }
+
+        .countdown:hover {
+            transform: scale(1.1);
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.8);
+        }
+
+        .loading {
+            font-size: 3rem;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .rejected {
+            font-size: 5rem;
+            color: #ff0000;
+            font-weight: bold;
+            animation: flash 0.5s ease-in-out 3;
+        }
+
+        @keyframes flash {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 1.8rem; }
+            .countdown { font-size: 2.5rem; }
+            .loading { font-size: 2rem; }
+            .rejected { font-size: 3rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Brecken Sound Space Appeal Countdown</h1>
+        <div id="display" class="countdown"></div>
+    </div>
+
+    <script>
+        const targetDate = new Date('November 30, 2025 00<a:00:1418002741808070820>00').getTime();
+        const display = document.getElementById('display');
+        let countdownEnded = false;
+        let loadingStartTime = null;
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            if (distance > 0) {
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                display.innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+            } else if (!countdownEnded) {
+                countdownEnded = true;
+                loadingStartTime = now;
+                display.className = 'loading';
+                display.innerHTML = 'Loading...';
+            } else if (loadingStartTime && (now - loadingStartTime < 86400000)) {
+                // Show loading for 24 hours (simulating Nov 30 to Nov 31)
+                const elapsed = now - loadingStartTime;
+                const loadingHours = Math.floor(elapsed / (1000 * 60 * 60));
+                const loadingMinutes = Math.floor((elapsed % (1000 * 60 * 60)) / (1000 * 60));
+                display.innerHTML = `Loading... ${loadingHours}h ${loadingMinutes}m`;
+            } else {
+                display.className = 'rejected';
+                display.innerHTML = 'REJECTED';
+                clearInterval(countdownInterval);
+            }
+        }
+
+        const countdownInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
